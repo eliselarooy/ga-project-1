@@ -7,115 +7,136 @@ const length = 8;
 let counter = 1;
 let player = counter % 2 === 0 ? 'w' : 'b';
 
-let gameBoard = [];
-
-const coordsToIndex = (x, y) => {
-  if (x >= 0 && x < 8 && y >= 0 && y < 8) {
-    return x + y * length;
-  } else {
-    console.log('invalid coords', x, y);
-  }
-};
-
-const getSquareForCoords = (x, y) => {
-  let index = coordsToIndex(x, y);
-  // console.log('get square', { x, y, index });
-  return gameBoard[index];
-};
-
-// const indexToCoords = (index) => {
-//   let x = index % length;
-//   let y = Math.floor(index / length);
-//   return [x, y];
-// };
-
-// const placeDisc = (square) => {
-//   const playersDisc = currentPlayer;
-//   const discElement = document.createElement('div');
-//   discElement.innerText = playersDisc;
-//   square.element.appendChild(discElement);
-//   square.disc = playersDisc;
-//   square.discElement = discElement;
-//   discElement.classList.add('disc');
-//   if (playersDisc === 'b') {
-//     discElement.classList.add('black-disc');
-//   } else {
-//     discElement.classList.add('white-disc');
-//   }
-
-//   remainingDiscs--;
-//   console.log('remaining discs', remainingDiscs);
-
-//   if (currentPlayer === 'b') {
-//     currentPlayer = 'w';
-//   } else {
-//     currentPlayer = 'b';
-//   }
-//   console.log('current player', currentPlayer);
-
-//   updateValidMoves();
-// };
-
-const onClick = (x, y) => {
-  console.log('you clicked', x, y);
-  let square = getSquareForCoords(x, y);
-  let index = coordsToIndex(x, y);
-  console.log('you clicked', square);
-  if (square.disc === null) {
-    // square is unoccupied
-    // now check if there is an opponents disc adjacent
-    if (checkIsAdjacent(player, x, y)) {
-      // need to check if it goes 'w''w''w' ... 'b'
-      createDisc(player, index);
-
-      console.log(counter);
-      player = counter % 2 === 0 ? 'w' : 'b';
-      console.log(player);
-    }
-  }
-};
-
-//   // if move is valid
-//   if (checkIsValidMove(x, y)) {
-//     placeDisc(square);
-//     console.log(square);
-//   }
-// };
+let cells = [];
+let playableSquares = [18, 19, 20, 21, 26, 29, 34, 37, 42, 43, 44, 45];
 
 const createBoard = () => {
-  for (let y = 0; y < 8; y++) {
-    for (let x = 0; x < 8; x++) {
-      const index = coordsToIndex(x, y);
-      const element = document.createElement('div');
-      element.innerText = index;
-      grid.appendChild(element);
+  for (let i = 0; i < 64; i++) {
+    const element = document.createElement('div');
+    element.dataset.id = i;
+    element.innerText = i;
 
-      // create empty array called cells
-      // createBoard() to create element 64x
-      // pushes elements into cells array
-      // renders cells into grid
-      // also add black and white classes for starting 4 discs
-
-      element.onclick = () => {
-        onClick(x, y);
-      };
-
-      const square = {
-        x: x,
-        y: y,
-        disc: null,
-        element: element,
-      };
-
-      gameBoard[index] = square;
+    if (i < 8) {
+      element.dataset.row = 0;
+      element.dataset.column = i;
+    } else if (i > 7 && i < 16) {
+      element.dataset.row = 1;
+      element.dataset.column = i - 8;
+    } else if (i > 15 && i < 24) {
+      element.dataset.row = 2;
+      element.dataset.column = i - 16;
+    } else if (i > 23 && i < 32) {
+      element.dataset.row = 3;
+      element.dataset.column = i - 24;
+    } else if (i > 31 && i < 40) {
+      element.dataset.row = 4;
+      element.dataset.column = i - 32;
+    } else if (i > 39 && i < 48) {
+      element.dataset.row = 5;
+      element.dataset.column = i - 40;
+    } else if (i > 47 && i < 56) {
+      element.dataset.row = 6;
+      element.dataset.column = i - 48;
+    } else if (i > 55) {
+      element.dataset.row = 7;
+      element.dataset.column = i - 56;
     }
+    grid.appendChild(element);
+
+    cells.push(element);
   }
-  createDisc('b', 27);
-  createDisc('b', 36);
-  createDisc('w', 28);
-  createDisc('w', 35);
-  createDisc('w', 43);
+  console.log(cells);
+
+  cells[27].classList.add('black-disc');
+  cells[28].classList.add('white-disc');
+  cells[35].classList.add('white-disc');
+  cells[36].classList.add('black-disc');
+
+  cells.forEach((cell) => {
+    cell.addEventListener('click', handleClick);
+  });
 };
+
+function handleClick(event) {
+  console.log(event.target.dataset.id);
+
+  if (playableSquares.includes(parseInt(event.target.dataset.id))) {
+    console.log('can play');
+
+    event.target.classList.add(player === 'w' ? 'white-disc' : 'black-disc');
+
+    const playableSurroundingSquares = getPlayableSurroundingSquares(
+      parseInt(event.target.dataset.id)
+    );
+    const playableSquaresWithDuplicates = [
+      ...playableSurroundingSquares,
+      ...playableSquares.filter(
+        (index) => index !== parseInt(event.target.dataset.id)
+      ),
+    ];
+    playableSquares = playableSquaresWithDuplicates.filter(
+      (num, pos) => playableSquaresWithDuplicates.indexOf(num) === pos
+    );
+    console.log(playableSquares);
+
+    checkHorizontal(event.target.dataset.row);
+
+    counter++;
+    player = counter % 2 === 0 ? 'w' : 'b';
+  }
+}
+
+function checkHorizontal(row) {
+  console.log('calling console from check horizontal');
+  // from cells get all elements with same row (filter)
+  const cellsInRow = cells.filter((cell) => cell.dataset.row === row);
+  console.log('cells in row', row, cellsInRow);
+
+  // find positions with black-disc
+  const cellsWithBlackDiscs = cellsInRow.filter((cell) =>
+    cell.classList.contains('black-disc')
+  );
+  console.log('cells with black discs', cellsWithBlackDiscs);
+
+  // find positions with white-discs
+  const cellsWithWhiteDiscs = cellsInRow.filter((cell) =>
+    cell.classList.contains('white-disc')
+  );
+  console.log('cells with white discs', cellsWithWhiteDiscs);
+
+  // find unplayed spaces
+  const emptyCells = cellsInRow.filter(
+    (cell) =>
+      !cell.classList.contains('black-disc') &&
+      !cell.classList.contains('white-disc')
+  );
+  console.log('empty cells', emptyCells);
+
+  // if no unplayed spaces between two of the players discs
+
+  // change all discs to players discs
+}
+
+function getPlayableSurroundingSquares(index) {
+  const surroundingSquares = [
+    index - 8,
+    index - 7,
+    index + 1,
+    index + 9,
+    index + 8,
+    index + 7,
+    index - 1,
+    index - 9,
+  ];
+  const playableSurroundingSquares = surroundingSquares.filter(
+    (number) =>
+      !cells[number].classList.contains('black-disc') &&
+      !cells[number].classList.contains('white-disc')
+  );
+  return playableSurroundingSquares;
+}
+
+createBoard();
 
 // go over each element in the cells array and add an event listener
 // returns position clicked on
@@ -125,128 +146,3 @@ const createBoard = () => {
 // add 'b' or 'w' players disc class to the square
 
 // check for discs to flip in all directions
-
-const createDisc = (color, index) => {
-  const discElement = document.createElement('div');
-  discElement.innerText = color;
-  discElement.classList.add('disc');
-  gameBoard[index].disc = color;
-  if (color === 'b') {
-    discElement.classList.add('black-disc');
-  } else {
-    discElement.classList.add('white-disc');
-  }
-  gameBoard[index].element.appendChild(discElement);
-  gameBoard[index].discElement = discElement;
-
-  counter++;
-};
-
-createBoard();
-
-const checkIsAdjacent = (player, x, y) => {
-  let directions = [
-    [x, y - 1], //N
-    [x + 1, y - 1], //NE
-    [x + 1, y], //E
-    [x + 1, y + 1], //SE
-    [x, y + 1], //S
-    [x - 1, y + 1], //SW
-    [x - 1, y], //W
-    [x - 1, y - 1], //NW
-  ];
-  let directionsWithDisc = directions.filter((p) => {
-    let x = p[0];
-    let y = p[1];
-    let square = getSquareForCoords(x, y);
-
-    if (!square) {
-      return false;
-    }
-
-    console.log('checking adjacent: x', x, 'y', y, 'square', square);
-    return square.disc !== null && square.disc !== player;
-  });
-
-  if (directionsWithDisc.length > 0) {
-    return true;
-  }
-};
-
-const checkN = (player, x, y) => {
-  let newx = x;
-  let newy = y - 1;
-  let square = getSquareForCoords(newx, newy);
-  if (square.disc !== null && square.disc !== player) {
-    checkN(player, newx, newy);
-    console.log('found opponents disc', newx, newy);
-  }
-
-  if (square.disc === player) {
-    console.log('found players disc', newx, newy);
-    return true;
-  }
-};
-
-// should return (3, 4) and (3, 5)
-checkN('b', 3, 6);
-
-// const checkIsAdjacent = (x, y) => {
-//   // check all directions starting with N
-//   let directions = [
-//     { x, y: y - 1 },
-//     // { x: x + 1, y: y - 1 },
-//     // { x: x + 1, y },
-//     // [x + 1, y + 1],
-//     // [x, y + 1],
-//     // [x - 1, y + 1],
-//     // [x - 1, y],
-//     // [x - 1, y - 1],
-//   ];
-//   let directionsWithDisc = directions.filter((p) => {
-//     let x = p.x;
-//     let y = p.y;
-//     let playersDisc = currentPlayer;
-//     console.log({ x, y });
-//     let square = getSquareForCoords(x, y);
-
-//     if (!square) {
-//       return false;
-//     }
-
-//     console.log({
-//       x,
-//       y,
-//       playersDisc,
-//       square,
-//     });
-//     // if square is not equal to null or current players disc
-//     return square.disc !== null && square.disc !== playersDisc;
-//   });
-//   console.log('checking adjacent squares', directionsWithDisc);
-//   if (directionsWithDisc.length > 0) {
-//     return true;
-//   }
-// };
-
-// const checkIsValidMove = (x, y) => {
-//   // is there already a disc in the square
-//   let square = getSquareForCoords(x, y);
-//   if (square.disc === null) {
-//     return checkIsAdjacent(x, y);
-//   }
-// };
-
-// const updateValidMoves = () => {
-//   for (let i = 0; i < gameBoard.length; i++) {
-//     let square = gameBoard[i];
-
-//     let isValidMove = checkIsValidMove(square.x, square.y);
-
-//     // if (isValidMove) {
-//     //   square.element.makegreen();
-//     // } else {
-//     //   square.element.makeplain();
-//     // }
-//   }
-// };
