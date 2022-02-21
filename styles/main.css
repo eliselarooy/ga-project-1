@@ -1,0 +1,60 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  height: 100vh;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.grid-container {
+  display: flex;
+  justify-content: center;
+}
+
+.grid {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  height: 600px;
+  width: 600px;
+  box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2);
+}
+
+.grid > div {
+  border: 1px solid black;
+  height: 12.5%;
+  width: 12.5%;
+}
+
+.instructions {
+  border: 1px solid black;
+  border-radius: 50%;
+  padding: 10px 15px;
+}
+
+.score-container {
+  align-items: space-around;
+}
+
+.disc {
+  border-radius: 50%;
+  height: 100%;
+  width: 100%;
+}
+
+.black-disc {
+  background-color: grey;
+}
+
+.white-disc {
+  background-color: aqua;
+}
+
+.valid-cell {
+  background-color: lightgreen;
+}
