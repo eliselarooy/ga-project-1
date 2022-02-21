@@ -1,24 +1,20 @@
 console.log('working');
 
-// // DOM elements
 const grid = document.querySelector('.grid');
-// const instructions = document.querySelector('.instructions');
-// const gameMessage = document.querySelector('.game-message');
-// const blackScore = document.querySelector('.black-score');
-// const whiteScore = document.querySelector('.white-score');
 
-// // grid variables
 const length = 8;
 
-// // game variables
 let counter = 1;
 let player = counter % 2 === 0 ? 'w' : 'b';
-// let currentPlayer = 'b';
-// let remainingDiscs = 60;
+
 let gameBoard = [];
 
 const coordsToIndex = (x, y) => {
-  return x + y * length;
+  if (x >= 0 && x < 8 && y >= 0 && y < 8) {
+    return x + y * length;
+  } else {
+    console.log('invalid coords', x, y);
+  }
 };
 
 const getSquareForCoords = (x, y) => {
@@ -66,8 +62,10 @@ const onClick = (x, y) => {
   let index = coordsToIndex(x, y);
   console.log('you clicked', square);
   if (square.disc === null) {
-    // check is there is an opponents disc adjacent
+    // square is unoccupied
+    // now check if there is an opponents disc adjacent
     if (checkIsAdjacent(player, x, y)) {
+      // need to check if it goes 'w''w''w' ... 'b'
       createDisc(player, index);
 
       console.log(counter);
@@ -92,6 +90,12 @@ const createBoard = () => {
       element.innerText = index;
       grid.appendChild(element);
 
+      // create empty array called cells
+      // createBoard() to create element 64x
+      // pushes elements into cells array
+      // renders cells into grid
+      // also add black and white classes for starting 4 discs
+
       element.onclick = () => {
         onClick(x, y);
       };
@@ -110,7 +114,17 @@ const createBoard = () => {
   createDisc('b', 36);
   createDisc('w', 28);
   createDisc('w', 35);
+  createDisc('w', 43);
 };
+
+// go over each element in the cells array and add an event listener
+// returns position clicked on
+
+// find available squares
+// allow player to click in one of these sqaures
+// add 'b' or 'w' players disc class to the square
+
+// check for discs to flip in all directions
 
 const createDisc = (color, index) => {
   const discElement = document.createElement('div');
@@ -158,6 +172,24 @@ const checkIsAdjacent = (player, x, y) => {
     return true;
   }
 };
+
+const checkN = (player, x, y) => {
+  let newx = x;
+  let newy = y - 1;
+  let square = getSquareForCoords(newx, newy);
+  if (square.disc !== null && square.disc !== player) {
+    checkN(player, newx, newy);
+    console.log('found opponents disc', newx, newy);
+  }
+
+  if (square.disc === player) {
+    console.log('found players disc', newx, newy);
+    return true;
+  }
+};
+
+// should return (3, 4) and (3, 5)
+checkN('b', 3, 6);
 
 // const checkIsAdjacent = (x, y) => {
 //   // check all directions starting with N
