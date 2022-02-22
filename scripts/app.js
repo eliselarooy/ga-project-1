@@ -8,7 +8,7 @@ let counter = 1;
 let player = counter % 2 === 0 ? 'w' : 'b';
 
 let cells = [];
-let playableSquares = [18, 19, 20, 21, 26, 29, 34, 37, 42, 43, 44, 45];
+// let playableSquares = [18, 19, 20, 21, 26, 29, 34, 37, 42, 43, 44, 45];
 
 const createBoard = () => {
   for (let i = 0; i < 64; i++) {
@@ -57,74 +57,158 @@ const createBoard = () => {
 };
 
 function handleClick(event) {
-  if (playableSquares.includes(parseInt(event.target.dataset.id))) {
-    event.target.classList.add(player === 'w' ? 'white-disc' : 'black-disc');
+  // if (playableSquares.includes(parseInt(event.target.dataset.id))) {
+  //   event.target.classList.add(player === 'w' ? 'white-disc' : 'black-disc');
 
-    const playableSurroundingSquares = getPlayableSurroundingSquares(
-      parseInt(event.target.dataset.id)
-    );
-    const playableSquaresWithDuplicates = [
-      ...playableSurroundingSquares,
-      ...playableSquares.filter(
-        (index) => index !== parseInt(event.target.dataset.id)
-      ),
-    ];
-    playableSquares = playableSquaresWithDuplicates.filter(
-      (num, pos) => playableSquaresWithDuplicates.indexOf(num) === pos
-    );
+  //   const playableSurroundingSquares = getPlayableSurroundingSquares(
+  //     parseInt(event.target.dataset.id)
+  //   );
+  //   const playableSquaresWithDuplicates = [
+  //     ...playableSurroundingSquares,
+  //     ...playableSquares.filter(
+  //       (index) => index !== parseInt(event.target.dataset.id)
+  //     ),
+  //   ];
+  //   playableSquares = playableSquaresWithDuplicates.filter(
+  //     (num, pos) => playableSquaresWithDuplicates.indexOf(num) === pos
+  //   );
 
-    checkHorizontal(event.target.dataset.row);
+  //   // checkHorizontal(event.target.dataset.row);
 
-    counter++;
-    player = counter % 2 === 0 ? 'w' : 'b';
+  // }
+
+  event.target.classList.add(player === 'w' ? 'white-disc' : 'black-disc');
+
+  checkLeft(event);
+  checkRight(event);
+
+  counter++;
+  console.log('counter', counter);
+  player = counter % 2 === 0 ? 'w' : 'b';
+  console.log('next player', player);
+}
+
+function checkLeft(event) {
+  const discsToFlip = [];
+
+  const clickedCell = event.target.dataset.id;
+  console.log('clicked cell', clickedCell);
+
+  const opponentsDisc = player === 'b' ? 'white-disc' : 'black-disc';
+  const ownDisc = player === 'w' ? 'white-disc' : 'black-disc';
+
+  if (cells[clickedCell].dataset.column < 2) {
+    console.log('not enough room to check left!');
+    return false;
+  } else {
+    let nextCellId = event.target.dataset.id - 1;
+
+    while (
+      cells[nextCellId].classList.contains(opponentsDisc) &&
+      cells[nextCellId].dataset.column > 0
+    ) {
+      discsToFlip.push(cells[nextCellId]);
+      nextCellId--;
+      console.log('next cell id', nextCellId);
+    }
+
+    console.log('discs to flip', discsToFlip);
+
+    if (
+      discsToFlip.length > 0 &&
+      cells[nextCellId].classList.contains(ownDisc)
+    ) {
+      discsToFlip.forEach((cell) => {
+        cell.classList.remove(opponentsDisc);
+        cell.classList.add(ownDisc);
+      });
+    }
   }
 }
 
-function checkHorizontal(row) {
-  // from cells get all elements with same row (filter)
-  const cellsInRow = cells.filter((cell) => cell.dataset.row === row);
+function checkRight(event) {
+  const discsToFlip = [];
 
-  // find positions with black-disc
-  const cellsWithBlackDiscs = cellsInRow
-    .filter((cell) => cell.classList.contains('black-disc'))
-    .map((cell) => cell.dataset.column);
+  const clickedCell = event.target.dataset.id;
+  console.log('clicked cell', clickedCell);
 
-  console.log('black disks are in', cellsWithBlackDiscs);
+  const opponentsDisc = player === 'b' ? 'white-disc' : 'black-disc';
+  const ownDisc = player === 'w' ? 'white-disc' : 'black-disc';
 
-  const startSplice = parseInt(cellsWithBlackDiscs[0]) + 1;
-  console.log('startSplice', startSplice);
-  const toTake = cellsWithBlackDiscs[1] - startSplice;
-  const gapBetweenDisks = cellsInRow.splice(startSplice, toTake);
+  if (cells[clickedCell].dataset.column > 5) {
+    console.log('not enough room to check right!');
+    return false;
+  } else {
+    let nextCellId = parseInt(event.target.dataset.id) + 1;
+    console.log(nextCellId);
 
-  if (
-    gapBetweenDisks.every((cell) =>
-      cell.classList.contains(player === 'w' ? 'black-disc' : 'white-disc')
-    )
-  ) {
-    gapBetweenDisks.forEach((cell) => {
-      cell.classList.remove(player === 'w' ? 'black-disc' : 'white-disc');
-      cell.classList.add(player === 'b' ? 'black-disc' : 'white-disc');
-    });
+    while (
+      cells[nextCellId].classList.contains(opponentsDisc) &&
+      cells[nextCellId].dataset.column < 7
+    ) {
+      discsToFlip.push(cells[nextCellId]);
+      nextCellId++;
+      console.log('next cell id', nextCellId);
+    }
+
+    console.log('discs to flip', discsToFlip);
+
+    if (
+      discsToFlip.length > 0 &&
+      cells[nextCellId].classList.contains(ownDisc)
+    ) {
+      discsToFlip.forEach((cell) => {
+        cell.classList.remove(opponentsDisc);
+        cell.classList.add(ownDisc);
+      });
+    }
   }
-
-  // find positions with white-discs
-  // const cellsWithWhiteDiscs = cellsInRow.filter((cell) =>
-  //   cell.classList.contains('white-disc')
-  // );
-  // console.log('cells with white discs', cellsWithWhiteDiscs);
-
-  // find unplayed spaces
-  const emptyCells = cellsInRow.filter(
-    (cell) =>
-      !cell.classList.contains('black-disc') &&
-      !cell.classList.contains('white-disc')
-  );
-  console.log('empty cells', emptyCells);
-
-  // if no unplayed spaces between two of the players discs
-
-  // change all discs to players discs
 }
+// function checkHorizontal(row) {
+//   // from cells get all elements with same row (filter)
+//   const cellsInRow = cells.filter((cell) => cell.dataset.row === row);
+
+//   // find positions with black-disc
+//   const cellsWithBlackDiscs = cellsInRow
+//     .filter((cell) => cell.classList.contains('black-disc'))
+//     .map((cell) => cell.dataset.column);
+
+//   console.log('black disks are in', cellsWithBlackDiscs);
+
+//   const startSplice = parseInt(cellsWithBlackDiscs[0]) + 1;
+//   console.log('startSplice', startSplice);
+//   const toTake = cellsWithBlackDiscs[1] - startSplice;
+//   const gapBetweenDiscs = cellsInRow.splice(startSplice, toTake);
+
+//   if (
+//     gapBetweenDiscs.every((cell) =>
+//       cell.classList.contains(player === 'w' ? 'black-disc' : 'white-disc')
+//     )
+//   ) {
+//     gapBetweenDiscs.forEach((cell) => {
+//       cell.classList.remove(player === 'w' ? 'black-disc' : 'white-disc');
+//       cell.classList.add(player === 'b' ? 'black-disc' : 'white-disc');
+//     });
+//   }
+
+//   // find positions with white-discs
+//   // const cellsWithWhiteDiscs = cellsInRow.filter((cell) =>
+//   //   cell.classList.contains('white-disc')
+//   // );
+//   // console.log('cells with white discs', cellsWithWhiteDiscs);
+
+//   // find unplayed spaces
+//   const emptyCells = cellsInRow.filter(
+//     (cell) =>
+//       !cell.classList.contains('black-disc') &&
+//       !cell.classList.contains('white-disc')
+//   );
+//   console.log('empty cells', emptyCells);
+
+//   // if no unplayed spaces between two of the players discs
+
+//   // change all discs to players discs
+// }
 
 function getPlayableSurroundingSquares(index) {
   const surroundingSquares = [
