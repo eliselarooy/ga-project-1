@@ -91,7 +91,7 @@ const flipDiscs = (currentPlayer, x, y) => {
     { x: 1, y: 1 }, // down-right
   ];
 
-  const discsToFlip = directions.filter((direction) => {
+  const validDirections = directions.filter((direction) => {
     let hasFoundOpponentDisc = false;
 
     let currentX = x + direction.x;
@@ -123,23 +123,35 @@ const flipDiscs = (currentPlayer, x, y) => {
     return false;
   });
 
-  console.log(discsToFlip);
+  console.log(validDirections);
 
-  discsToFlip.forEach((item) => {
+  validDirections.forEach((item) => {
     let targetX = x + item.x;
     let targetY = y + item.y;
-    let square = getSquareForCoords(targetX, targetY);
-    if (currentPlayer === 'b') {
-      square.disc = 'b';
-      square.discElement.innerText = 'b';
-      square.discElement.classList.remove('white-disc');
-      square.discElement.classList.add('black-disc');
-    } else {
-      square.disc = 'w';
-      square.discElement.innerText = 'w';
-      square.discElement.classList.remove('black-disc');
-      square.discElement.classList.add('white-disc');
+    while (isOnBoard(targetX, targetY)) {
+      const square = getSquareForCoords(targetX, targetY);
+
+      if (square.disc !== currentPlayer && square.disc !== null) {
+        if (currentPlayer === 'b') {
+          square.disc = 'b';
+          square.discElement.innerText = 'b';
+          square.discElement.classList.remove('white-disc');
+          square.discElement.classList.add('black-disc');
+        } else {
+          square.disc = 'w';
+          square.discElement.innerText = 'w';
+          square.discElement.classList.remove('black-disc');
+          square.discElement.classList.add('white-disc');
+        }
+      } else {
+        return false;
+      }
+
+      targetX = targetX + item.x;
+      targetY = targetY + item.y;
     }
+
+    return false;
   });
 };
 
