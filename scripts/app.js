@@ -7,7 +7,7 @@ const length = 8;
 let counter = 1;
 let player = counter % 2 === 0 ? 'w' : 'b';
 
-let gameBoard = [];
+let cells = [];
 
 const coordsToIndex = (x, y) => {
   if (x >= 0 && x < 8 && y >= 0 && y < 8) {
@@ -19,7 +19,7 @@ const coordsToIndex = (x, y) => {
 
 const getSquareForCoords = (x, y) => {
   let index = coordsToIndex(x, y);
-  return gameBoard[index];
+  return cells[index];
 };
 
 const isOnBoard = (x, y) => {
@@ -79,40 +79,69 @@ const checkIsValidMove = (currentPlayer, x, y) => {
   return validDirections.length > 0;
 };
 
-const flipDiscs = () => {};
+const flipDiscs = (currentPlayer, x, y) => {
+  const directions = [
+    { x: -1, y: 0 }, // left
+    { x: 1, y: 0 }, // right
+    { x: 0, y: -1 }, // up
+    { x: 0, y: 1 }, // down
+    { x: -1, y: -1 }, // up-left
+    { x: 1, y: -1 }, // up-right
+    { x: -1, y: 1 }, // down-left
+    { x: 1, y: 1 }, // down-right
+  ];
 
-// const indexToCoords = (index) => {
-//   let x = index % length;
-//   let y = Math.floor(index / length);
-//   return [x, y];
-// };
+  const discsToFlip = directions.filter((direction) => {
+    let hasFoundOpponentDisc = false;
 
-// const placeDisc = (square) => {
-//   const playersDisc = currentPlayer;
-//   const discElement = document.createElement('div');
-//   discElement.innerText = playersDisc;
-//   square.element.appendChild(discElement);
-//   square.disc = playersDisc;
-//   square.discElement = discElement;
-//   discElement.classList.add('disc');
-//   if (playersDisc === 'b') {
-//     discElement.classList.add('black-disc');
-//   } else {
-//     discElement.classList.add('white-disc');
-//   }
+    let currentX = x + direction.x;
+    let currentY = y + direction.y;
 
-//   remainingDiscs--;
-//   console.log('remaining discs', remainingDiscs);
+    while (isOnBoard(currentX, currentY)) {
+      const square = getSquareForCoords(currentX, currentY);
 
-//   if (currentPlayer === 'b') {
-//     currentPlayer = 'w';
-//   } else {
-//     currentPlayer = 'b';
-//   }
-//   console.log('current player', currentPlayer);
+      // No disc
+      if (square.disc === null) {
+        return false;
+      }
 
-//   updateValidMoves();
-// };
+      // Our disc
+      if (square.disc === currentPlayer) {
+        // Valid move if we have trapped another player's disc
+        return hasFoundOpponentDisc;
+      }
+
+      // Their disc
+      if (square.disc !== currentPlayer) {
+        hasFoundOpponentDisc = true;
+      }
+
+      currentX = currentX + direction.x;
+      currentY = currentY + direction.y;
+    }
+
+    return false;
+  });
+
+  console.log(discsToFlip);
+
+  discsToFlip.forEach((item) => {
+    let targetX = x + item.x;
+    let targetY = y + item.y;
+    let square = getSquareForCoords(targetX, targetY);
+    if (currentPlayer === 'b') {
+      square.disc = 'b';
+      square.discElement.innerText = 'b';
+      square.discElement.classList.remove('white-disc');
+      square.discElement.classList.add('black-disc');
+    } else {
+      square.disc = 'w';
+      square.discElement.innerText = 'w';
+      square.discElement.classList.remove('black-disc');
+      square.discElement.classList.add('white-disc');
+    }
+  });
+};
 
 const onClick = (x, y) => {
   console.log('you clicked', x, y);
@@ -123,9 +152,11 @@ const onClick = (x, y) => {
   if (checkIsValidMove(player, x, y)) {
     createDisc(player, index);
 
-    console.log(counter);
+    flipDiscs(player, x, y);
+
+    console.log('counter', counter);
     player = counter % 2 === 0 ? 'w' : 'b';
-    console.log(player);
+    console.log('next player', player);
   }
 };
 
@@ -148,76 +179,30 @@ const createBoard = () => {
         element: element,
       };
 
-      gameBoard[index] = square;
+      cells[index] = square;
     }
   }
+
   createDisc('b', 27);
   createDisc('b', 36);
   createDisc('w', 28);
   createDisc('w', 35);
-  createDisc('w', 43);
 };
 
 const createDisc = (color, index) => {
   const discElement = document.createElement('div');
   discElement.innerText = color;
   discElement.classList.add('disc');
-  gameBoard[index].disc = color;
+  cells[index].disc = color;
   if (color === 'b') {
     discElement.classList.add('black-disc');
   } else {
     discElement.classList.add('white-disc');
   }
-  gameBoard[index].element.appendChild(discElement);
-  gameBoard[index].discElement = discElement;
+  cells[index].element.appendChild(discElement);
+  cells[index].discElement = discElement;
 
   counter++;
 };
 
 createBoard();
-
-// const checkIsAdjacent = (player, x, y) => {
-//   let directions = [
-//     [x, y - 1], //N
-//     [x + 1, y - 1], //NE
-//     [x + 1, y], //E
-//     [x + 1, y + 1], //SE
-//     [x, y + 1], //S
-//     [x - 1, y + 1], //SW
-//     [x - 1, y], //W
-//     [x - 1, y - 1], //NW
-//   ];
-//   let directionsWithDisc = directions.filter((p) => {
-//     let x = p[0];
-//     let y = p[1];
-//     let square = getSquareForCoords(x, y);
-
-//     if (!square) {
-//       return false;
-//     }
-
-//     console.log('checking adjacent: x', x, 'y', y, 'square', square);
-//     return square.disc !== null && square.disc !== player;
-//   });
-
-//   if (directionsWithDisc.length > 0) {
-//     return true;
-//   }
-// };
-
-// const checkR = (player, x, y) => {
-//   let newx = x + 1;
-//   let newy = y;
-//   let square = getSquareForCoords(newx, newy);
-//   if (square.disc !== null && square.disc !== player) {
-//     checkR(player, newx, newy);
-//     console.log('found opponents disc', newx, newy);
-//   }
-
-//   if (square.disc === player) {
-//     console.log('found players disc', newx, newy);
-//     return true;
-//   }
-// };
-
-// checkR('b', 3, 6);
