@@ -144,14 +144,12 @@ const flipDiscs = (currentPlayer, x, y) => {
           square.discElement.classList.add('white-disc');
         }
       } else {
-        return false;
+        return;
       }
 
       targetX = targetX + item.x;
       targetY = targetY + item.y;
     }
-
-    return false;
   });
 };
 
@@ -169,6 +167,8 @@ const onClick = (x, y) => {
     console.log('counter', counter);
     player = counter % 2 === 0 ? 'w' : 'b';
     console.log('next player', player);
+
+    updateValidCells();
   }
 };
 
@@ -218,3 +218,57 @@ const createDisc = (color, index) => {
 };
 
 createBoard();
+
+const updateValidCells = () => {
+  for (const cell of cells) {
+    const isValid = checkIsValidMove(player, cell.x, cell.y);
+
+    if (isValid) {
+      cell.element.classList.add('valid-cell');
+    } else {
+      cell.element.classList.remove('valid-cell');
+    }
+  }
+};
+
+updateValidCells();
+
+const isGameOver = () => {
+  const validCells = cells.filter((cell) => {
+    if (checkIsValidMove('b', cell.x, cell.y)) {
+      return true;
+    }
+
+    if (checkIsValidMove('w', cell.x, cell.y)) {
+      return true;
+    }
+
+    return false;
+  });
+  if (validCells.length > 0) {
+    return false;
+  }
+  return true;
+};
+
+const findWinner = () => {
+  const blackDiscs = cells.filter((cell) => {
+    return cell.disc === 'b';
+  });
+  const numberOfBlackDiscs = blackDiscs.length;
+
+  const whiteDiscs = cells.filter((cell) => {
+    return cell.disc === 'w';
+  });
+  const numberOfWhiteDiscs = whiteDiscs.length;
+
+  if (numberOfBlackDiscs > numberOfWhiteDiscs) {
+    return 'b';
+  }
+
+  if (numberOfWhiteDiscs > numberOfBlackDiscs) {
+    return 'w';
+  }
+
+  return null;
+};
