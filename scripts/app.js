@@ -79,8 +79,9 @@ function handleClick(event) {
 
   event.target.classList.add(player === 'w' ? 'white-disc' : 'black-disc');
 
-  checkLeft(event);
-  checkRight(event);
+  // checkLeft(event);
+  // checkRight(event);
+  checkUp(event);
 
   counter++;
   console.log('counter', counter);
@@ -127,6 +128,45 @@ function checkLeft(event) {
 }
 
 function checkRight(event) {
+  const discsToFlip = [];
+
+  const clickedCell = event.target.dataset.id;
+  console.log('clicked cell', clickedCell);
+
+  const opponentsDisc = player === 'b' ? 'white-disc' : 'black-disc';
+  const ownDisc = player === 'w' ? 'white-disc' : 'black-disc';
+
+  if (cells[clickedCell].dataset.column > 5) {
+    console.log('not enough room to check right!');
+    return false;
+  } else {
+    let nextCellId = parseInt(event.target.dataset.id) + 1;
+    console.log(nextCellId);
+
+    while (
+      cells[nextCellId].classList.contains(opponentsDisc) &&
+      cells[nextCellId].dataset.column < 7
+    ) {
+      discsToFlip.push(cells[nextCellId]);
+      nextCellId++;
+      console.log('next cell id', nextCellId);
+    }
+
+    console.log('discs to flip', discsToFlip);
+
+    if (
+      discsToFlip.length > 0 &&
+      cells[nextCellId].classList.contains(ownDisc)
+    ) {
+      discsToFlip.forEach((cell) => {
+        cell.classList.remove(opponentsDisc);
+        cell.classList.add(ownDisc);
+      });
+    }
+  }
+}
+
+function checkUp(event) {
   const discsToFlip = [];
 
   const clickedCell = event.target.dataset.id;
