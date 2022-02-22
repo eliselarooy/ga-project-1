@@ -45,7 +45,6 @@ const createBoard = () => {
 
     cells.push(element);
   }
-  console.log(cells);
 
   cells[27].classList.add('black-disc');
   cells[28].classList.add('white-disc');
@@ -58,11 +57,7 @@ const createBoard = () => {
 };
 
 function handleClick(event) {
-  console.log(event.target.dataset.id);
-
   if (playableSquares.includes(parseInt(event.target.dataset.id))) {
-    console.log('can play');
-
     event.target.classList.add(player === 'w' ? 'white-disc' : 'black-disc');
 
     const playableSurroundingSquares = getPlayableSurroundingSquares(
@@ -77,7 +72,6 @@ function handleClick(event) {
     playableSquares = playableSquaresWithDuplicates.filter(
       (num, pos) => playableSquaresWithDuplicates.indexOf(num) === pos
     );
-    console.log(playableSquares);
 
     checkHorizontal(event.target.dataset.row);
 
@@ -87,22 +81,37 @@ function handleClick(event) {
 }
 
 function checkHorizontal(row) {
-  console.log('calling console from check horizontal');
   // from cells get all elements with same row (filter)
   const cellsInRow = cells.filter((cell) => cell.dataset.row === row);
-  console.log('cells in row', row, cellsInRow);
 
   // find positions with black-disc
-  const cellsWithBlackDiscs = cellsInRow.filter((cell) =>
-    cell.classList.contains('black-disc')
-  );
-  console.log('cells with black discs', cellsWithBlackDiscs);
+  const cellsWithBlackDiscs = cellsInRow
+    .filter((cell) => cell.classList.contains('black-disc'))
+    .map((cell) => cell.dataset.column);
+
+  console.log('black disks are in', cellsWithBlackDiscs);
+
+  const startSplice = parseInt(cellsWithBlackDiscs[0]) + 1;
+  console.log('startSplice', startSplice);
+  const toTake = cellsWithBlackDiscs[1] - startSplice;
+  const gapBetweenDisks = cellsInRow.splice(startSplice, toTake);
+
+  if (
+    gapBetweenDisks.every((cell) =>
+      cell.classList.contains(player === 'w' ? 'black-disc' : 'white-disc')
+    )
+  ) {
+    gapBetweenDisks.forEach((cell) => {
+      cell.classList.remove(player === 'w' ? 'black-disc' : 'white-disc');
+      cell.classList.add(player === 'b' ? 'black-disc' : 'white-disc');
+    });
+  }
 
   // find positions with white-discs
-  const cellsWithWhiteDiscs = cellsInRow.filter((cell) =>
-    cell.classList.contains('white-disc')
-  );
-  console.log('cells with white discs', cellsWithWhiteDiscs);
+  // const cellsWithWhiteDiscs = cellsInRow.filter((cell) =>
+  //   cell.classList.contains('white-disc')
+  // );
+  // console.log('cells with white discs', cellsWithWhiteDiscs);
 
   // find unplayed spaces
   const emptyCells = cellsInRow.filter(
