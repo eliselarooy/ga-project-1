@@ -1,6 +1,9 @@
 console.log('working');
 
 const grid = document.querySelector('.grid');
+const blackScore = document.querySelector('.black-score');
+const whiteScore = document.querySelector('.white-score');
+const gameMessage = document.querySelector('.game-message');
 
 const length = 8;
 
@@ -134,12 +137,10 @@ const flipDiscs = (currentPlayer, x, y) => {
       if (square.disc !== currentPlayer && square.disc !== null) {
         if (currentPlayer === 'b') {
           square.disc = 'b';
-          square.discElement.innerText = 'b';
           square.discElement.classList.remove('white-disc');
           square.discElement.classList.add('black-disc');
         } else {
           square.disc = 'w';
-          square.discElement.innerText = 'w';
           square.discElement.classList.remove('black-disc');
           square.discElement.classList.add('white-disc');
         }
@@ -168,6 +169,16 @@ const onClick = (x, y) => {
     player = counter % 2 === 0 ? 'w' : 'b';
     console.log('next player', player);
 
+    if (player === 'b') {
+      gameMessage.innerText = "Player 1's turn";
+    }
+
+    if (player === 'w') {
+      gameMessage.innerText = "Player 2's turn";
+    }
+
+    updateScores();
+
     updateValidCells();
   }
 };
@@ -177,7 +188,6 @@ const createBoard = () => {
     for (let x = 0; x < 8; x++) {
       const index = coordsToIndex(x, y);
       const element = document.createElement('div');
-      element.innerText = index;
       grid.appendChild(element);
 
       element.onclick = () => {
@@ -203,7 +213,6 @@ const createBoard = () => {
 
 const createDisc = (color, index) => {
   const discElement = document.createElement('div');
-  discElement.innerText = color;
   discElement.classList.add('disc');
   cells[index].disc = color;
   if (color === 'b') {
@@ -229,6 +238,32 @@ const updateValidCells = () => {
       cell.element.classList.remove('valid-cell');
     }
   }
+
+  const validCells = cells.filter((cell) => {
+    if (checkIsValidMove(player, cell.x, cell.y)) {
+      return true;
+    }
+  });
+
+  if (validCells.length > 0) {
+    return true;
+  } else if (isGameOver()) {
+    gameMessage.innerText = 'Game over!';
+    const winner = findWinner();
+  } else {
+    counter++;
+
+    player = counter % 2 === 0 ? 'w' : 'b';
+
+    if (player === 'b') {
+      gameMessage.innerText = "Player 1's turn";
+    }
+
+    if (player === 'w') {
+      gameMessage.innerText = "Player 2's turn";
+    }
+    updateValidCells();
+  }
 };
 
 updateValidCells();
@@ -245,10 +280,27 @@ const isGameOver = () => {
 
     return false;
   });
+
   if (validCells.length > 0) {
     return false;
   }
   return true;
+};
+
+const updateScores = () => {
+  const blackDiscs = cells.filter((cell) => {
+    return cell.disc === 'b';
+  });
+
+  const numberOfBlackDiscs = blackDiscs.length;
+  blackScore.innerText = numberOfBlackDiscs;
+
+  const whiteDiscs = cells.filter((cell) => {
+    return cell.disc === 'w';
+  });
+
+  const numberOfWhiteDiscs = whiteDiscs.length;
+  whiteScore.innerText = numberOfWhiteDiscs;
 };
 
 const findWinner = () => {

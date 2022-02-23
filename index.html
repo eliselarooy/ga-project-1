@@ -8,17 +8,28 @@
     <title>Document</title>
   </head>
   <body>
-    <h1>Reversi</h1>
-    <p class="game-message">Player 1's turn</p>
-    <div class="instructions">?</div>
-    <div class="grid-container">
-      <div class="grid"></div>
+    <div class="game-container">
+      <h1>REVERSI</h1>
+      <button class="instructions">?</button>
+      <p class="game-message">Player 1's turn</p>
+      <div class="grid-container">
+        <div class="grid"></div>
+      </div>
+      <div class="score-container">
+        <div class="score-box player-one">
+          <div class="black-score-circle">
+            <p class="black-score">2</p>
+          </div>
+          <p>PLAYER 1</p>
+        </div>
+        <div class="score-box player-two">
+          <div class="white-score-circle">
+            <p class="white-score">2</p>
+          </div>
+          <p>PLAYER 2</p>
+        </div>
+      </div>
     </div>
-    <div class="score-container">
-      <p>player 1: <span class="black-score">2</span></p>
-      <p>player 2: <span class="white-score">2</span></p>
-    </div>
-    <p>Remaining discs: <span class="remaining-discs">60</span></p>
     <script src="./scripts/app.js"></script>
   </body>
 </html>
