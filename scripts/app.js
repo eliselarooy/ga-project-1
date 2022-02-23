@@ -199,6 +199,7 @@ const createBoard = () => {
         y: y,
         disc: null,
         element: element,
+        discElement: null,
       };
 
       cells[index] = square;
@@ -337,3 +338,31 @@ const toggleInstructions = () => {
 };
 
 instructionsButton.addEventListener('click', toggleInstructions);
+
+const resetButton = document.querySelector('.reset');
+
+const reset = () => {
+  console.log('reset');
+  for (const cell of cells) {
+    cell.disc = null;
+    cell.element.classList.remove('valid-cell');
+
+    if (cell.discElement) {
+      cell.element.removeChild(cell.discElement);
+      cell.discElement = null;
+    }
+  }
+  counter = 1;
+  player = counter % 2 === 0 ? 'w' : 'b';
+
+  gameMessage.innerText = "Player 1's turn";
+
+  createDisc('b', 27);
+  createDisc('b', 36);
+  createDisc('w', 28);
+  createDisc('w', 35);
+
+  updateScores();
+};
+
+resetButton.addEventListener('click', reset);
