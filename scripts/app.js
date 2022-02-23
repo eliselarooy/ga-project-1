@@ -324,3 +324,16 @@ const findWinner = () => {
 
   return null;
 };
+
+const instructionsButton = document.querySelector('.instructions');
+
+const toggleInstructions = () => {
+  const howToPlay = document.querySelector('.how-to-play');
+  if (howToPlay.style.display === 'none') {
+    howToPlay.style.display = 'block';
+  } else {
+    howToPlay.style.display = 'none';
+  }
+};
+
+instructionsButton.addEventListener('click', toggleInstructions);

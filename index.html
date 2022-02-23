@@ -10,7 +10,18 @@
   <body>
     <div class="game-container">
       <h1>REVERSI</h1>
-      <button class="instructions">?</button>
+      <button class="instructions">
+        <div>?</div>
+      </button>
+      <p class="how-to-play">
+        Reversi, sometimes known as Othello is a strategy board game for two
+        players.<br /><br />Each player takes turns in laying a counter on the
+        board. The player's disc is laid in line with another of their counters,
+        with their opponents counters in between. All the opponents counters in
+        between the player's counters are turned to the their colour.<br /><br />Once
+        all the squares have been filled, or neither player can make a move, the
+        player with the most pieces with their colour face up wins.
+      </p>
       <p class="game-message">Player 1's turn</p>
       <div class="grid-container">
         <div class="grid"></div>
@@ -29,6 +40,9 @@
           <p>PLAYER 2</p>
         </div>
       </div>
+      <button class="reset" type="reset">
+        <div>RESTART</div>
+      </button>
     </div>
     <script src="./scripts/app.js"></script>
   </body>
