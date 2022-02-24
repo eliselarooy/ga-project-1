@@ -1,11 +1,11 @@
-console.log('working');
-
 const grid = document.querySelector('.grid');
 const blackScore = document.querySelector('.black-score');
 const whiteScore = document.querySelector('.white-score');
 const gameMessage = document.querySelector('.game-message');
 const blackCircle = document.querySelector('.black-score-circle');
 const whiteCircle = document.querySelector('.white-score-circle');
+const instructionsButton = document.querySelector('.instructions');
+const resetButton = document.querySelector('.reset');
 
 const length = 8;
 
@@ -57,18 +57,18 @@ const checkIsValidMove = (currentPlayer, x, y) => {
     while (isOnBoard(currentX, currentY)) {
       const square = getSquareForCoords(currentX, currentY);
 
-      // No disc
+      // no disc
       if (square.disc === null) {
         return false;
       }
 
-      // Our disc
+      // players disc
       if (square.disc === currentPlayer) {
-        // Valid move if we have trapped another player's disc
+        // valid move if player has trapped an opponent's disc
         return hasFoundOpponentDisc;
       }
 
-      // Their disc
+      // opponent's disc
       if (square.disc !== currentPlayer) {
         hasFoundOpponentDisc = true;
       }
@@ -80,7 +80,7 @@ const checkIsValidMove = (currentPlayer, x, y) => {
     return false;
   });
 
-  // The move is valid if there is at least one direction that captures a disc!
+  // the move is valid if there is at least one direction that captures a disc!
   return validDirections.length > 0;
 };
 
@@ -105,18 +105,14 @@ const flipDiscs = (currentPlayer, x, y) => {
     while (isOnBoard(currentX, currentY)) {
       const square = getSquareForCoords(currentX, currentY);
 
-      // No disc
       if (square.disc === null) {
         return false;
       }
 
-      // Our disc
       if (square.disc === currentPlayer) {
-        // Valid move if we have trapped another player's disc
         return hasFoundOpponentDisc;
       }
 
-      // Their disc
       if (square.disc !== currentPlayer) {
         hasFoundOpponentDisc = true;
       }
@@ -127,8 +123,6 @@ const flipDiscs = (currentPlayer, x, y) => {
 
     return false;
   });
-
-  console.log(validDirections);
 
   validDirections.forEach((item) => {
     let targetX = x + item.x;
@@ -158,18 +152,14 @@ const flipDiscs = (currentPlayer, x, y) => {
 
 const onClick = (x, y) => {
   console.log('you clicked', x, y);
-  let square = getSquareForCoords(x, y);
-  let index = coordsToIndex(x, y);
-  console.log('you clicked', square);
+  const index = coordsToIndex(x, y);
 
   if (checkIsValidMove(player, x, y)) {
     createDisc(player, index);
 
     flipDiscs(player, x, y);
 
-    console.log('counter', counter);
     player = counter % 2 === 0 ? 'w' : 'b';
-    console.log('next player', player);
 
     if (player === 'b') {
       gameMessage.innerText = "Player 1's turn";
@@ -340,8 +330,6 @@ const findWinner = () => {
   return null;
 };
 
-const instructionsButton = document.querySelector('.instructions');
-
 const toggleInstructions = () => {
   const howToPlay = document.querySelector('.how-to-play');
   if (howToPlay.style.display === 'none') {
@@ -352,8 +340,6 @@ const toggleInstructions = () => {
 };
 
 instructionsButton.addEventListener('click', toggleInstructions);
-
-const resetButton = document.querySelector('.reset');
 
 const reset = () => {
   console.log('reset');
