@@ -4,6 +4,8 @@ const grid = document.querySelector('.grid');
 const blackScore = document.querySelector('.black-score');
 const whiteScore = document.querySelector('.white-score');
 const gameMessage = document.querySelector('.game-message');
+const blackCircle = document.querySelector('.black-score-circle');
+const whiteCircle = document.querySelector('.white-score-circle');
 
 const length = 8;
 
@@ -171,10 +173,14 @@ const onClick = (x, y) => {
 
     if (player === 'b') {
       gameMessage.innerText = "Player 1's turn";
+      whiteCircle.classList.remove('pulsing-white-circle');
+      blackCircle.classList.add('pulsing-black-circle');
     }
 
     if (player === 'w') {
       gameMessage.innerText = "Player 2's turn";
+      blackCircle.classList.remove('pulsing-black-circle');
+      whiteCircle.classList.add('pulsing-white-circle');
     }
 
     updateScores();
@@ -356,6 +362,9 @@ const reset = () => {
   player = counter % 2 === 0 ? 'w' : 'b';
 
   gameMessage.innerText = "Player 1's turn";
+
+  whiteCircle.classList.remove('pulsing-white-circle');
+  blackCircle.classList.add('pulsing-black-circle');
 
   createDisc('b', 27);
   createDisc('b', 36);
