@@ -200,4 +200,8 @@ h1 {
     height: 50px;
     width: 50px;
   }
+
+  .how-to-play {
+    width: 95%;
+  }
 }
