@@ -255,8 +255,16 @@ const updateValidCells = () => {
   if (validCells.length > 0) {
     return true;
   } else if (isGameOver()) {
-    gameMessage.innerText = 'Game over!';
+    whiteCircle.classList.remove('pulsing-white-circle');
+    blackCircle.classList.remove('pulsing-black-circle');
     const winner = findWinner();
+    if (winner === null) {
+      gameMessage.innerText = "Game over! It's a tie!";
+    } else if (winner === 'b') {
+      gameMessage.innerText = 'Game over! Player 1 wins!';
+    } else {
+      gameMessage.innerText = 'Game over! Player 2 wins!';
+    }
   } else {
     counter++;
 

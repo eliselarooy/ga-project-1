@@ -14,7 +14,6 @@ body {
 }
 
 .game-container {
-  padding: 20px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -60,7 +59,7 @@ h1 {
   justify-content: center;
   align-items: center;
   position: absolute;
-  right: 20px;
+  right: 0;
   top: 20px;
   font-size: 30px;
 }
@@ -84,6 +83,13 @@ h1 {
   align-items: center;
   text-align: center;
   margin-top: 30px;
+}
+
+.score-box {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .black-score-circle,
@@ -173,5 +179,33 @@ h1 {
   }
   100% {
     box-shadow: 0 0 0 0 rgba(233, 193, 155, 0);
+  }
+}
+
+@media only screen and (max-width: 650px) {
+  .grid {
+    width: 400px;
+    height: 400px;
+  }
+}
+
+@media only screen and (max-width: 445px) {
+  .grid {
+    width: 350px;
+    height: 350px;
+  }
+  .black-score-circle,
+  .white-score-circle {
+    border-radius: 50%;
+    height: 50px;
+    width: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .instructions {
+    height: 50px;
+    width: 50px;
   }
 }
