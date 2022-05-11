@@ -3,10 +3,10 @@
 <img src="./assets/reversi.png" alt="screenshot" width="600px"/>
 
 ## Overview
-Reversi is a strategy board game for two players, played on an 8x8 grid. The aim of the game is to get more pieces on the board than your opponent. You flip your opponent's pieces by trapping them between two of your own. This was a solo project and my first project in the General Assembly Software Engineering course. 
+_Reversi_ is a strategy board game for two players, played on an 8x8 grid. The aim of the game is to get more pieces on the board than your opponent. You flip your opponent's pieces by trapping them between two of your own. This was a solo project and my first project in the General Assembly Software Engineering course. 
 
-> Duration: 7 days \
-> Technologies: HTML, CSS, JavaScript 
+> **Duration:** 7 days \
+> **Technologies:** HTML, CSS, JavaScript 
 
 The game is deployed on GitHub pages and available to play here &rarr; https://eliselarooy.github.io/Reversi/
 
@@ -22,7 +22,7 @@ The requirements stated that:
 I started by wire-framing and breaking the project down into smaller manageable pieces. I first sketched out how I wanted the game to look which gave me an idea of the layout and the elements needed in the HTML file. Next, I began to pseudocode the functionality and game logic. I recognised that the main challenge would be designing the logic to determine the valid moves for each turn. 
 
 ### Functionality
-The 8x8 grid was initialised using a nested for loop to give each cell an x- and a y-reference which would help to simplify the game logic later. I ended up restructuring this as an array of objects to make it easier to store and access properties for each cell. 
+The 8x8 grid was initialised using a nested _for loop_ to give each cell an x- and a y-reference which would help to simplify the game logic later. I ended up restructuring this as an array of objects to make it easier to store and access properties for each cell. 
 
 ```javascript
 const createBoard = () => {
