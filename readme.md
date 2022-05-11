@@ -1,6 +1,6 @@
 # 	Reversi - GA Project 1
 
-<img src="./assets/reversi.png" alt="drawing" width="600px"/>
+<img src="./assets/reversi.png" alt="screenshot" width="600px"/>
 
 ## Overview
 Reversi is a strategy board game for two players, played on an 8x8 grid. The aim of the game is to get more pieces on the board than your opponent. You flip your opponent's pieces by trapping them between two of your own. This was a solo project and my first project in the General Assembly Software Engineering course. 
