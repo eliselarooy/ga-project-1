@@ -8,7 +8,7 @@ _Reversi_ is a strategy board game for two players, played on an 8x8 grid. The a
 > **Duration:** 7 days \
 > **Technologies:** HTML, CSS, JavaScript 
 
-The game is deployed on GitHub pages and available to play here &rarr; https://eliselarooy.github.io/Reversi/
+The game is deployed on GitHub pages and available to play here &rarr; https://eliselarooy.github.io/reversi/
 
 ## The Brief
 Create a grid-based game using HTML, CSS and JavaScript. The game needs to be rendered in the browser and deployed online to be publicly accessible.
