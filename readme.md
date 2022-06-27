@@ -1,22 +1,53 @@
+<div id="top"></div>
+
 # 	Reversi - GA Project 1
 
 <img src="./assets/reversi.png" alt="screenshot" width="600px"/>
 
+<!-- TABLE OF CONTENTS -->
+<details>
+  <summary>Table of Contents</summary>
+  <ol>
+    <li><a href="#overview">Overview</a></li>
+    <li><a href="#installation">Installation</a></li>
+    <li>
+      <a href="#approach">Approach</a>
+      <ul>
+        <li><a href="#planning">Planning</a></li>
+        <li><a href="#functionality">Functionality</a></li>
+        <li><a href="#styling">Styling</a></li>
+      </ul>
+    </li>
+    <li><a href="#wins-and-blockers">Wins and Blockers</a></li>
+    <li><a href="#future-improvements">Future Improvements</a></li>
+    <li><a href="#key-learnings">Key Learnings</a></li>
+  </ol>
+</details>
+
+<!-- Overview -->
 ## Overview
 _Reversi_ is a strategy board game for two players, played on an 8x8 grid. The aim of the game is to get more pieces on the board than your opponent. You flip your opponent's pieces by trapping them between two of your own. This was a solo project and my first project in the General Assembly Software Engineering course. 
 
-> **Duration:** 7 days \
-> **Technologies:** HTML, CSS, JavaScript 
+* **Duration:** 7 days 
+* **Technologies:** HTML, CSS, JavaScript 
 
-The game is deployed on GitHub pages and available to play here &rarr; https://eliselarooy.github.io/reversi/
+<!-- Installation -->
+## Installation
+Play the deployed version here: https://eliselarooy.github.io/reversi/
 
+To run locally: 
+1. Clone this repository
+2. Open in live server 
+
+<!-- The Brief -->
 ## The Brief
 Create a grid-based game using HTML, CSS and JavaScript. The game needs to be rendered in the browser and deployed online to be publicly accessible.
 
 The requirements stated that: 
 - The game should be playable for two players on the same computer, taking turns to make their moves
 - The winner should be displayed when the game is over
-
+ 
+<!-- Approach -->
 ## Approach
 ### Planning
 I started by wire-framing and breaking the project down into smaller manageable pieces. I first sketched out how I wanted the game to look which gave me an idea of the layout and the elements needed in the HTML file. Next, I began to pseudocode the functionality and game logic. I recognised that the main challenge would be designing the logic to determine the valid moves for each turn. 
@@ -126,15 +157,20 @@ On the final day of the project, I tidied up my JavaScript code and focussed on 
 
 Media queries were added to adjust the game size for different screen sizes. The game should be playable on all screens with a minimum width of 360px.
 
+<!-- Wins and Blockers -->
 ## Wins and Blockers
 As this was my first coding project, the biggest win from this project was my increased understanding of JavaScript. 
 
 The main blocker was creating the logic for determining a valid move as this was necessary for most of the game’s functionality and made it challenging to build the game up incrementally. Once this was achieved, it was just a matter of building logic around this to create the gameplay and win logic. 
 
+<!-- Future Improvements -->
 ## Future Improvements
 - Add a popup message to indicate when a player is unable to make a move and skips a turn
 - Improve the display of the game over message and winner
 - Make a single-player mode, perhaps with the computer selecting a valid move at random or the move that results in most discs being flipped to their colour
 
+<!-- Key Learnings -->
 ## Key Learnings
 I am pleased with how my project turned out and learned a lot from using objects and different types of loops in JavaScript. My key takeaways from this project are the importance of planning, writing pseudocode, and breaking a problem down into smaller pieces. 
+
+<p align="right">(<a href="#top">back to top</a>)</p>
